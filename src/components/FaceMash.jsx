@@ -24,24 +24,20 @@ export default function EnhancedHandGestures() {
     const lastTapTimeRef = useRef(0);
     const particlesRef = useRef([]);
 
-    // For drag functionality
     const dragModeRef = useRef(false);
     const dragStartPosRef = useRef({ x: 0, y: 0 });
     const housePositionRef = useRef({ x: 0, y: 0, z: 0 });
     const housePreviousPosRef = useRef({ x: 0, y: 0, z: 0 });
 
-    // Configuration settings
     const colorChangeDelay = 500;
     const smoothingFactor = 0.15;
-    const doubleTapThreshold = 300; // ms for double tap detection
+    const doubleTapThreshold = 300;
 
-    // Hand line colors
-    const leftHandLineColor = '#FF00FF'; // Bright magenta for left hand
-    const rightHandLineColor = '#00FFFF'; // Cyan for right hand
-    const fingertipColor = '#FF0000'; // Red for fingertips
+    const leftHandLineColor = '#FF00FF';
+    const rightHandLineColor = '#00FFFF';
+    const fingertipColor = '#FF0000';
 
     useEffect(() => {
-        // Keep canvas size in sync with window size
         const updateCanvasSize = () => {
             if (canvasRef.current) {
                 canvasRef.current.width = window.innerWidth;
@@ -49,12 +45,10 @@ export default function EnhancedHandGestures() {
             }
         };
 
-        // Initialize and properly set element sizes
         const initializeLayout = () => {
             updateCanvasSize();
         };
 
-        // Update layout when window is resized
         const handleResize = () => {
             initializeLayout();
             if (rendererRef.current) {
@@ -68,26 +62,24 @@ export default function EnhancedHandGestures() {
 
         window.addEventListener('resize', handleResize);
 
-        // Helper function to generate random house colors
         const getRandomHouseColor = () => {
             const houseColors = [
-                0x8B4513, // SaddleBrown
-                0xD2691E, // Chocolate
-                0xA52A2A, // Brown
-                0xCD5C5C, // IndianRed
-                0xBC8F8F, // RosyBrown
-                0xF4A460, // SandyBrown
-                0xDAA520, // GoldenRod
-                0xB8860B,  // DarkGoldenRod
-                0x9370DB, // MediumPurple
-                0x3CB371, // MediumSeaGreen
-                0x4682B4, // SteelBlue
-                0x6A5ACD  // SlateBlue
+                0x8B4513,
+                0xD2691E,
+                0xA52A2A,
+                0xCD5C5C,
+                0xBC8F8F,
+                0xF4A460,
+                0xDAA520,
+                0xB8860B, 
+                0x9370DB,
+                0x3CB371,
+                0x4682B4,
+                0x6A5ACD 
             ];
             return houseColors[Math.floor(Math.random() * houseColors.length)];
         };
 
-        // Initialize webcam
         const initWebcam = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
@@ -115,7 +107,6 @@ export default function EnhancedHandGestures() {
             }
         };
 
-        // Create a simple house model with Three.js
         const createHouseModel = () => {
             const house = new THREE.Group();
 
@@ -132,7 +123,6 @@ export default function EnhancedHandGestures() {
             baseHouse.position.y = 0.75;
             house.add(baseHouse);
 
-            // Roof (pyramid)
             const roofGeometry = new THREE.ConeGeometry(1.8, 1.2, 4);
             const roofMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
             const roof = new THREE.Mesh(roofGeometry, roofMaterial);
@@ -140,14 +130,12 @@ export default function EnhancedHandGestures() {
             roof.rotation.y = Math.PI / 4;
             house.add(roof);
 
-            // Door
             const doorGeometry = new THREE.PlaneGeometry(0.5, 0.8);
             const doorMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
             const door = new THREE.Mesh(doorGeometry, doorMaterial);
             door.position.set(0, 0.4, 1.01);
             house.add(door);
 
-            // Windows
             const windowGeometry = new THREE.PlaneGeometry(0.4, 0.4);
             const windowMaterial = new THREE.MeshPhongMaterial({
                 color: 0xADD8E6,
@@ -155,17 +143,14 @@ export default function EnhancedHandGestures() {
                 opacity: 0.7
             });
 
-            // Left window
             const leftWindow = new THREE.Mesh(windowGeometry, windowMaterial);
             leftWindow.position.set(-0.7, 0.7, 1.01);
             house.add(leftWindow);
 
-            // Right window
             const rightWindow = new THREE.Mesh(windowGeometry, windowMaterial);
             rightWindow.position.set(0.7, 0.7, 1.01);
             house.add(rightWindow);
 
-            // Add windows to sides
             const leftSideWindow = leftWindow.clone();
             leftSideWindow.position.set(-1.01, 0.7, 0);
             leftSideWindow.rotation.y = Math.PI / 2;
@@ -176,21 +161,18 @@ export default function EnhancedHandGestures() {
             rightSideWindow.rotation.y = Math.PI / 2;
             house.add(rightSideWindow);
 
-            // Chimney
             const chimneyGeometry = new THREE.BoxGeometry(0.3, 0.8, 0.3);
             const chimneyMaterial = new THREE.MeshPhongMaterial({ color: 0x696969 });
             const chimney = new THREE.Mesh(chimneyGeometry, chimneyMaterial);
             chimney.position.set(0.6, 2, 0.5);
             house.add(chimney);
 
-            // Create edge geometry for wireframe effect
             const edges = new THREE.EdgesGeometry(baseGeometry);
             const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
             const wireframe = new THREE.LineSegments(edges, lineMaterial);
             wireframe.position.y = 0.75;
             house.add(wireframe);
 
-            // Roof edges
             const roofEdges = new THREE.EdgesGeometry(roofGeometry);
             const roofWireframe = new THREE.LineSegments(roofEdges, lineMaterial);
             roofWireframe.position.y = 1.8;
@@ -200,7 +182,6 @@ export default function EnhancedHandGestures() {
             return house;
         };
 
-        // Create ground plane
         const createGroundPlane = () => {
             const texture = new THREE.TextureLoader().load(
                 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABrSURBVFhH7dcxDoAgDAXQ9v83m3aW0AZE6CJE8OkkHML2kATi2V5gZOwHZmT0ACNiPxAR+w0R0f0DEdE/ERGxvxAR+xMRsf8QEfsTEbH/ERGxPxER+x8Rsf8REfsfEbH/ARH7HxGx/wAR+x8Rsf8A2L0w/gU5I+YAAAAASUVORK5CYII='
@@ -284,19 +265,15 @@ export default function EnhancedHandGestures() {
 
             rendererRef.current = renderer;
 
-            // Create and add house model
             const house = createHouseModel();
             houseModelRef.current = house;
             scene.add(house);
 
-            // Add ground plane
             const ground = createGroundPlane();
             scene.add(ground);
 
-            // Initialize particle system
             particlesRef.current = createParticleSystem();
 
-            // Store initial position
             housePositionRef.current = {
                 x: house.position.x,
                 y: house.position.y,
@@ -304,7 +281,6 @@ export default function EnhancedHandGestures() {
             };
             housePreviousPosRef.current = { ...housePositionRef.current };
 
-            // Add lights
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
 
@@ -313,30 +289,24 @@ export default function EnhancedHandGestures() {
             scene.add(directionalLight);
         };
 
-        // Animation loop for Three.js
         const animate = () => {
             requestAnimationFrame(animate);
 
-            // Rotate the house if enabled and not in drag mode
             if (houseModelRef.current && !dragModeRef.current && rotationEnabledRef.current) {
                 houseModelRef.current.rotation.y += 0.005;
 
-                // Add subtle breathing animation
                 const time = Date.now() * 0.001;
                 const breatheFactor = 0.05 * Math.sin(time) + 1;
                 houseModelRef.current.scale.y = currentHouseSizeRef.current * breatheFactor;
             }
 
-            // Update particles
             updateParticles();
 
-            // Render the scene
             if (rendererRef.current && sceneRef.current && cameraRef.current) {
                 rendererRef.current.render(sceneRef.current, cameraRef.current);
             }
         };
 
-        // Calculate distance between two 3D points
         const calculateDistance = (point1, point2) => {
             const dx = point1.x - point2.x;
             const dy = point1.y - point2.y;
@@ -344,7 +314,6 @@ export default function EnhancedHandGestures() {
             return Math.sqrt(dx * dx + dy * dy + dz * dz);
         };
 
-        // Detect if a point is inside/near the house
         const isPointNearHouse = (point) => {
             if (!houseModelRef.current) return false;
 
@@ -365,14 +334,12 @@ export default function EnhancedHandGestures() {
             return distance < currentSize * 1.5;
         };
 
-        // Convert normalized hand position to 3D coordinates
         const convertHandToWorldPosition = (handPoint) => {
             const worldX = (handPoint.x - 0.5) * 10;
             const worldY = (0.5 - handPoint.y) * 10;
             return { x: worldX, y: worldY, z: 0 };
         };
 
-        // Detect if hand is in a fist
         const isFist = (landmarks) => {
             const thumbTip = landmarks[4];
             const indexTip = landmarks[8];
@@ -390,7 +357,6 @@ export default function EnhancedHandGestures() {
             return maxDistance < 0.1 && calculateDistance(wrist, thumbTip) < 0.1;
         };
 
-        // Draw hand landmarks on canvas
         const drawLandmarks = (landmarks, isLeft) => {
             if (!canvasRef.current) return;
 
@@ -412,7 +378,6 @@ export default function EnhancedHandGestures() {
 
             const handColor = isLeft ? leftHandLineColor : rightHandLineColor;
 
-            // Draw connections
             canvasCtx.lineWidth = lineWidth;
             canvasCtx.strokeStyle = handColor;
 
@@ -426,7 +391,6 @@ export default function EnhancedHandGestures() {
                 canvasCtx.stroke();
             });
 
-            // Draw landmarks
             landmarks.forEach((landmark, index) => {
                 let pointColor = handColor;
                 if (index === 4 || index === 8) {
@@ -446,7 +410,6 @@ export default function EnhancedHandGestures() {
             });
         };
 
-        // Process video frames with MediaPipe results
         const onResults = (results) => {
             if (!canvasRef.current) return;
 
@@ -468,7 +431,6 @@ export default function EnhancedHandGestures() {
                 let isDragging = false;
                 let dragHandIndex = -1;
 
-                // Check for reset gesture (both hands in fist)
                 if (results.multiHandLandmarks.length === 2) {
                     const leftHandLandmarks = results.multiHandedness[0].label === 'Left' ?
                         results.multiHandLandmarks[0] : results.multiHandLandmarks[1];
@@ -476,7 +438,6 @@ export default function EnhancedHandGestures() {
                         results.multiHandLandmarks[0] : results.multiHandLandmarks[1];
 
                     if (isFist(leftHandLandmarks) && isFist(rightHandLandmarks)) {
-                        // Reset house position, scale, and rotation
                         if (houseModelRef.current) {
                             houseModelRef.current.position.set(0, 0, 0);
                             houseModelRef.current.scale.set(1, 1, 1);
@@ -492,7 +453,6 @@ export default function EnhancedHandGestures() {
                     }
                 }
 
-                // Process each hand
                 for (let handIndex = 0; handIndex < results.multiHandLandmarks.length; handIndex++) {
                     const landmarks = results.multiHandLandmarks[handIndex];
                     const handedness = results.multiHandedness[handIndex].label;
@@ -501,7 +461,6 @@ export default function EnhancedHandGestures() {
                     drawLandmarks(landmarks, isLeftHand);
 
                     if (!isLeftHand) {
-                        // RIGHT HAND: Control house size and drag
                         const thumbTip = landmarks[4];
                         const indexTip = landmarks[8];
                         const middleTip = landmarks[12];
@@ -574,10 +533,8 @@ export default function EnhancedHandGestures() {
 
                         rightHandActiveRef.current = true;
                     } else {
-                        // LEFT HAND: Change house color and toggle rotation
                         const indexTip = landmarks[8];
 
-                        // Detect double tap for rotation toggle
                         if (isPointNearHouse(indexTip)) {
                             const currentTime = Date.now();
                             if (currentTime - lastTapTimeRef.current < doubleTapThreshold) {
@@ -588,13 +545,11 @@ export default function EnhancedHandGestures() {
                                 lastTapTimeRef.current = currentTime;
                             }
 
-                            // Change color
                             const currentTimeColor = Date.now();
                             if (currentTimeColor - lastColorChangeTimeRef.current > colorChangeDelay) {
                                 const newColor = getRandomHouseColor();
                                 if (houseMaterialRef.current) {
                                     houseMaterialRef.current.color.setHex(newColor);
-                                    // Spawn particles at house position
                                     const housePos = new THREE.Vector3();
                                     houseModelRef.current.getWorldPosition(housePos);
                                     spawnParticles(housePos, newColor);
@@ -613,7 +568,6 @@ export default function EnhancedHandGestures() {
             }
         };
 
-        // Initialize MediaPipe Hands
         const initMediaPipeHands = async () => {
             setStatus('Initializing MediaPipe Hands...');
 
@@ -650,7 +604,6 @@ export default function EnhancedHandGestures() {
             }
         };
 
-        // Start the application
         const startApp = async () => {
             try {
                 await initWebcam();
