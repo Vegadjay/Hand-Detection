@@ -650,6 +650,10 @@ export default function EnhancedHandGestures() {
                 ref={threeContainerRef}
                 className="absolute top-0 left-0 w-full h-full pointer-events-none z-5"
             />
+            <div className="absolute top-5 right-5 text-white bg-black bg-opacity-75 p-4 rounded font-sans z-10 max-w-md">
+                <h3 className="text-lg font-bold mb-2">Note:- </h3>
+                <p>If hand recognition is not working so please wait sometime mediapipe is intializing..</p>
+            </div>
             <p className="absolute top-0 left-0 font-sans text-base bg-green-500 bg-opacity-50 p-2">
                 <a href="https://x.com/JAY_VEGAD_" target="_blank" rel="noreferrer" className="text-blue-800">Twitter</a> |
                 <a href="https://github.com/Vegadjay/" target="_blank" rel="noreferrer" className="text-blue-800 ml-1">Source Code</a> |
