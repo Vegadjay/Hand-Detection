@@ -71,11 +71,11 @@ export default function EnhancedHandGestures() {
                 0xBC8F8F,
                 0xF4A460,
                 0xDAA520,
-                0xB8860B, 
+                0xB8860B,
                 0x9370DB,
                 0x3CB371,
                 0x4682B4,
-                0x6A5ACD 
+                0x6A5ACD
             ];
             return houseColors[Math.floor(Math.random() * houseColors.length)];
         };
@@ -650,24 +650,6 @@ export default function EnhancedHandGestures() {
                 ref={threeContainerRef}
                 className="absolute top-0 left-0 w-full h-full pointer-events-none z-5"
             />
-            {showInstructions && (
-                <div className="absolute top-5 right-5 text-white bg-black bg-opacity-75 p-4 rounded font-sans z-10 max-w-md">
-                    <h3 className="text-lg font-bold mb-2">Gesture Controls</h3>
-                    <ul className="list-disc pl-5 text-sm">
-                        <li>Right hand pinch: Scale house (thumb + index)</li>
-                        <li>Right hand middle finger extended: Drag house</li>
-                        <li>Left hand index finger tap: Change house color</li>
-                        <li>Left hand double tap: Toggle rotation</li>
-                        <li>Both hands in fists: Reset house</li>
-                    </ul>
-                    <button
-                        className="mt-3 px-3 py-1 bg-blue-600 rounded hover:bg-blue-700"
-                        onClick={() => setShowInstructions(false)}
-                    >
-                        Hide Instructions
-                    </button>
-                </div>
-            )}
             <p className="absolute top-0 left-0 font-sans text-base bg-green-500 bg-opacity-50 p-2">
                 <a href="https://x.com/JAY_VEGAD_" target="_blank" rel="noreferrer" className="text-blue-800">Twitter</a> |
                 <a href="https://github.com/Vegadjay/" target="_blank" rel="noreferrer" className="text-blue-800 ml-1">Source Code</a> |
