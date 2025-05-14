@@ -715,11 +715,10 @@ export default function EnhancedHandGestures() {
                     </button>
                 </div>
             )}
-            <p className="absolute bottom-1 left-1 font-sans text-base bg-white bg-opacity-50 p-2">
-                <a href="https://x.com/measure_plan" target="_blank" rel="noreferrer" className="text-blue-800">Twitter</a> |
-                <a href="https://www.instagram.com/stereo.drift/" target="_blank" rel="noreferrer" className="text-blue-800 ml-1">Instagram</a> |
-                <a href="https://github.com/collidingScopes/threejs-handtracking-101" target="_blank" rel="noreferrer" className="text-blue-800 ml-1">Source Code</a> |
-                <a href="https://buymeacoffee.com/stereodrift" target="_blank" rel="noreferrer" className="text-blue-800 ml-1">❤️</a>
+            <p className="absolute top-0 left-0 font-sans text-base bg-green-500 bg-opacity-50 p-2">
+                <a href="https://x.com/JAY_VEGAD_" target="_blank" rel="noreferrer" className="text-blue-800">Twitter</a> |
+                <a href="https://github.com/Vegadjay/" target="_blank" rel="noreferrer" className="text-blue-800 ml-1">Source Code</a> |
+                <a>❤️</a>
             </p>
         </div>
     );
